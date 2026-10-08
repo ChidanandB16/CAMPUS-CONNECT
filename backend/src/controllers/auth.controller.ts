@@ -26,7 +26,7 @@ export const registerUser: AsyncRequestHandler = async (req, res, next) => {
     const newUser = new User({ name, email, password: hashedPassword, role });
     await newUser.save();
 
-    sendResponse(res, 201, false, "User registered successfully", null);
+    sendResponse(res, 201, true, "User registered successfully", null);
     return;
   } catch (error) {
     next(error);

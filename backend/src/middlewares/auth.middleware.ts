@@ -14,7 +14,7 @@ export const authenticate = async (
 ) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    sendResponse(res, 401, true, "Unauthorized", null);
+    sendResponse(res, 401, false, "Unauthorized", null);
     return;
   }
 
@@ -26,7 +26,7 @@ export const authenticate = async (
     req.user = decoded;
     next();
   } catch (error) {
-    sendResponse(res, 401, true, "Invalid token", null);
+    sendResponse(res, 401, false, "Invalid token", null);
     return;
   }
 };
@@ -34,7 +34,7 @@ export const authenticate = async (
 export const authorize = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      sendResponse(res, 403, true, "Forbidden", null);
+      sendResponse(res, 403, false, "Forbidden", null);
       return;
     }
     next();

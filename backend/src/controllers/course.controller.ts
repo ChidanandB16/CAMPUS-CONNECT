@@ -190,7 +190,7 @@ export const disenrollStudent: RequestHandler = async (req, res) => {
     ).populate("lecturer", "name email");
 
     if (!course) {
-      sendResponse(res, 404, true, "Course not found", null);
+      sendResponse(res, 404, false, "Course not found", null);
       return;
     }
 
@@ -198,7 +198,7 @@ export const disenrollStudent: RequestHandler = async (req, res) => {
     return;
   } catch (error) {
     console.log(error);
-    sendResponse(res, 500, true, "Failed to disenroll student", null);
+    sendResponse(res, 500, false, "Failed to disenroll student", null);
     return;
   }
 };
