@@ -62,7 +62,7 @@ export const deleteMaterial: RequestHandler = async (req, res) => {
     return;
   } catch (error) {
     console.error("Error deleting material:", error);
-    sendResponse(res, 500, false, "Material deleted successfully", null);
+    sendResponse(res, 500, false, "Failed to delete material", null);
     return;
   }
 };
