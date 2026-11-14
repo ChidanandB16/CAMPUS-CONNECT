@@ -19,7 +19,30 @@ app.get("/", (req, res) => {
     });
 });
 // Middleware
-app.use((0, cors_1.default)());
+const allowedOrigins = [
+    /^http:\/\/localhost:\d+$/,
+    process.env.FRONTEND_URL || "https://department-ms.vercel.app",
+];
+app.use((0, cors_1.default)({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin)
+            return callback(null, true);
+        // Check if the origin is allowed
+        const isAllowed = allowedOrigins.some((allowedOrigin) => allowedOrigin instanceof RegExp
+            ? allowedOrigin.test(origin)
+            : allowedOrigin === origin);
+        if (isAllowed) {
+            return callback(null, true);
+        }
+        else {
+            return callback(new Error("CORS not allowed"), false);
+        }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express_1.default.json());
 app.use("/uploads", express_1.default.static("uploads"));
 // Routes
