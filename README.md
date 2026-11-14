@@ -8,7 +8,7 @@ The CAMPUS-CONNECT System is designed to streamline educational operations by pr
 
 ## Live Applications
 
-- Live URL: <https://department-ms.vercel.app/>
+- Live URL: <https://campus-connect-psi-eight.vercel.app/>
   
 
 ## Core Features
