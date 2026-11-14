@@ -30,7 +30,7 @@ const registerUser = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const hashedPassword = yield (0, auth_1.hashPassword)(password);
         const newUser = new User_1.User({ name, email, password: hashedPassword, role });
         yield newUser.save();
-        (0, responseHandler_1.sendResponse)(res, 201, false, "User registered successfully", null);
+        (0, responseHandler_1.sendResponse)(res, 201, true, "User registered successfully", null);
         return;
     }
     catch (error) {
