@@ -36,6 +36,10 @@ The CAMPUS-CONNECT System is designed to streamline educational operations by pr
 - Update user details
 - View enrolled/teaching courses
 
+## Security Fix: Authentication on User Updates
+
+I found a bug in my backend auth: the user update route (PUT /api/users/:id) wasn't protected, so profile updates didn't require a valid login. I fixed it by requiring a valid JWT on the route, letting users update only their own name and email, restricting role changes to admins, whitelisting the fields that can be updated, and making sure the password hash is never returned in API responses. I also added tests covering each of these rules.
+
 ## Technology Stack
 
 ### Frontend
