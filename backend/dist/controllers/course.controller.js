@@ -174,7 +174,7 @@ const disenrollStudent = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const course = yield Course_1.Course.findByIdAndUpdate(courseId, { $pull: { students: studentId } }, { new: true } // Return the updated course
         ).populate("lecturer", "name email");
         if (!course) {
-            (0, responseHandler_1.sendResponse)(res, 404, true, "Course not found", null);
+            (0, responseHandler_1.sendResponse)(res, 404, false, "Course not found", null);
             return;
         }
         (0, responseHandler_1.sendResponse)(res, 200, true, "Disenroll Successfull", course);
@@ -182,7 +182,7 @@ const disenrollStudent = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
     catch (error) {
         console.log(error);
-        (0, responseHandler_1.sendResponse)(res, 500, true, "Failed to disenroll student", null);
+        (0, responseHandler_1.sendResponse)(res, 500, false, "Failed to disenroll student", null);
         return;
     }
 });
