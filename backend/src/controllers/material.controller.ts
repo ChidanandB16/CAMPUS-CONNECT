@@ -3,6 +3,11 @@ import { Material } from "../models/Material";
 import { Course } from "../models/Course";
 import { sendResponse } from "../utils/responseHandler";
 
+// Stored values are legacy local paths (sometimes with Windows backslashes);
+// serve every file from the public /uploads route by filename only.
+const toFileUrl = (storedPath: string) =>
+  `/uploads/${storedPath.split(/[\\/]/).pop()}`;
+
 export const uploadMaterial: RequestHandler = async (req, res) => {
   try {
     const { courseId } = req.params;
@@ -14,7 +19,7 @@ export const uploadMaterial: RequestHandler = async (req, res) => {
 
     const material = new Material({
       title: req.body.title,
-      fileUrl: req.file?.path,
+      fileUrl: `/uploads/${file.filename}`,
       courseId,
       uploadedBy: req.user?.userId,
     });
@@ -36,7 +41,11 @@ export const getMaterialsByCourse: RequestHandler = async (req, res) => {
   try {
     const { courseId } = req.params;
     const materials = await Material.find({ courseId });
-    sendResponse(res, 200, true, "Materials fetched successfully", materials);
+    const data = materials.map((material) => ({
+      ...material.toObject(),
+      fileUrl: toFileUrl(material.fileUrl),
+    }));
+    sendResponse(res, 200, true, "Materials fetched successfully", data);
   } catch (error) {
     sendResponse(res, 500, false, "Failed to fetch materials", null);
   }
