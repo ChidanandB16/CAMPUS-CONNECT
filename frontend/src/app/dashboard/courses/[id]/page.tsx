@@ -12,6 +12,11 @@ import { Material } from "@/types/material";
 import { User } from "@/types/user";
 import { useApiError } from "@/hooks/useApiError";
 
+// Backend origin without the /api suffix, for links to non-API routes like /uploads.
+const apiOrigin = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api"
+).replace(/\/api\/?$/, "");
+
 interface Params {
   id: string;
 }
@@ -177,7 +182,7 @@ export default function CourseDetailsPage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <a
-                              href={material.fileUrl}
+                              href={`${apiOrigin}${material.fileUrl}`}
                               download
                               className="text-blue-600 hover:text-blue-900 mr-4"
                             >
