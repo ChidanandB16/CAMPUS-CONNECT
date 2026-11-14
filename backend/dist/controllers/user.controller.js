@@ -43,8 +43,35 @@ exports.getUserById = getUserById;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { name, email, role } = req.body;
+    // Defense in depth: the route authenticates, but never trust mounting alone.
+    if (!req.user) {
+        (0, responseHandler_1.sendResponse)(res, 401, false, "Unauthorized", null);
+        return;
+    }
+    const isAdmin = req.user.role === "admin";
+    const isSelf = req.user.userId === id;
+    if (!isAdmin && !isSelf) {
+        (0, responseHandler_1.sendResponse)(res, 403, false, "You can only update your own profile", null);
+        return;
+    }
+    if (role !== undefined && !isAdmin) {
+        (0, responseHandler_1.sendResponse)(res, 403, false, "Only admins can change roles", null);
+        return;
+    }
+    // Build the update explicitly so callers can't set arbitrary fields
+    // and absent body fields never overwrite stored values.
+    const update = {};
+    if (name !== undefined)
+        update.name = name;
+    if (email !== undefined)
+        update.email = email;
+    if (role !== undefined && isAdmin)
+        update.role = role;
     try {
-        const updatedUser = yield User_1.User.findByIdAndUpdate(id, { name, email, role }, { new: true });
+        const updatedUser = yield User_1.User.findByIdAndUpdate(id, update, {
+            new: true,
+            runValidators: true,
+        }).select("-password");
         if (!updatedUser) {
             (0, responseHandler_1.sendResponse)(res, 404, false, "User not found", null);
             return;
