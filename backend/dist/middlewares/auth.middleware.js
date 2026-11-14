@@ -19,7 +19,7 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     var _a;
     const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     if (!token) {
-        (0, responseHandler_1.sendResponse)(res, 401, true, "Unauthorized", null);
+        (0, responseHandler_1.sendResponse)(res, 401, false, "Unauthorized", null);
         return;
     }
     try {
@@ -28,7 +28,7 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next();
     }
     catch (error) {
-        (0, responseHandler_1.sendResponse)(res, 401, true, "Invalid token", null);
+        (0, responseHandler_1.sendResponse)(res, 401, false, "Invalid token", null);
         return;
     }
 });
@@ -36,7 +36,7 @@ exports.authenticate = authenticate;
 const authorize = (roles) => {
     return (req, res, next) => {
         if (!req.user || !roles.includes(req.user.role)) {
-            (0, responseHandler_1.sendResponse)(res, 403, true, "Forbidden", null);
+            (0, responseHandler_1.sendResponse)(res, 403, false, "Forbidden", null);
             return;
         }
         next();
